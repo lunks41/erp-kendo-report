@@ -37,7 +37,11 @@ var configuration = new ConfigurationBuilder()
 // Registers application-specific services and enables built-in logging.
 builder.Services.RegisterService(builder.Configuration); // Extension method to register domain services
 
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+});
 builder.Services.AddRazorPages().AddNewtonsoftJson();
 
 var reportsPath = System.IO.Path.Combine(builder.Environment.ContentRootPath, "Reports");
