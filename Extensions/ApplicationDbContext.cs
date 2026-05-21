@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace TelerikReportingRestService.Extensions
+namespace my_report.Extensions
 {
     public class ApplicationDbContext : DbContext
     {

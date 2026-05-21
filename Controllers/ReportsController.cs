@@ -5,7 +5,7 @@ using System.Net.Mail;
 using Telerik.Reporting.Services;
 using Telerik.Reporting.Services.AspNetCore;
 
-namespace TelerikReportingRestService.Controllers
+namespace my_report.Controllers
 {
     [Route("api/[controller]")]
     [AllowAnonymous]  // Allow anonymous access for reporting service

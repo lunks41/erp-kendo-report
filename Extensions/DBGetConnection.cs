@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace TelerikReportingRestService.Extensions
+namespace my_report.Extensions
 {
     public class CompanyRegistration
     {

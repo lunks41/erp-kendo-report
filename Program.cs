@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
-using TelerikReportingRestService.Extensions;
+using my_report.Extensions;
 
 EnableTracing();
 var builder = WebApplication.CreateBuilder(args);
@@ -27,22 +27,13 @@ builder.Services.AddCors(c =>
                .WithExposedHeaders("*"));
 });
 
-// Build configuration from single appsettings.json
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddEnvironmentVariables()
-    .Build();
+// appsettings.json is gitignored — copy appsettings.example.json locally.
+// WebApplication.CreateBuilder already loads appsettings.json, appsettings.{Environment}.json, and environment variables.
+builder.Services.RegisterService(builder.Configuration);
 
-// Registers application-specific services and enables built-in logging.
-builder.Services.RegisterService(builder.Configuration); // Extension method to register domain services
-
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-});
-builder.Services.AddRazorPages().AddNewtonsoftJson();
+// Do not call AddNewtonsoftJson() globally: Telerik Reporting 2026 Q1+ REST uses System.Text.Json.
+builder.Services.AddControllers();
+builder.Services.AddRazorPages();
 
 var reportsPath = System.IO.Path.Combine(builder.Environment.ContentRootPath, "Reports");
 
@@ -101,9 +92,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// CORS must be before UseRouting() and should handle preflight requests
-app.UseCors("AllowOrigin");
-
+// With endpoint routing, UseCors must run after UseRouting and before UseAuthentication/UseAuthorization.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -111,6 +100,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowOrigin");
 
 // Authentication and Authorization middleware
 app.UseAuthentication();
