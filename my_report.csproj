@@ -9,6 +9,11 @@
 	  <Content Include="Reports\**\*.png" CopyToOutputDirectory="PreserveNewest" />
 	  <Content Include="Reports\**\*.jpg" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
+	<!-- Local Telerik JWT — never copy to build/publish output (deploy via secure config). -->
+	<ItemGroup>
+	  <Content Remove="telerik-license.txt" />
+	  <None Update="telerik-license.txt" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />

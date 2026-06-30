@@ -10,7 +10,9 @@ Do **not** commit `telerik-license.txt` to GitHub. It contains your Telerik lice
 2. Paste your license key from [Telerik Your Licenses](https://www.telerik.com/account/your-licenses) (one JWT line only; remove the comment lines from the example if you keep them in the real file)
 3. Build/run — `Telerik.Licensing` picks up `telerik-license.txt` in the project root
 
-On a server, deploy `telerik-license.txt` via secure configuration (not from the git repo).
+On a server, deploy `telerik-license.txt` via secure configuration (not from the git repo). The project file excludes it from publish output; copy the file manually on the server.
+
+Never run `git add -f telerik-license.txt`.
 
 ## Configuration
 

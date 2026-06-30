@@ -320,8 +320,10 @@ __pycache__/
 # Telerik Reporting license key (JWT) — never commit; use telerik-license.txt locally
 telerik-license.txt
 **/telerik-license.txt
+!telerik-license.txt.example
 telerik-licensing.log
 **/telerik-licensing.log
+**/Telerik.Licensing.LicenseInfo.cs
 
 # Local secrets (use appsettings.example.json as template)
 appsettings.json
