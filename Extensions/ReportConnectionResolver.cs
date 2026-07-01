@@ -27,18 +27,37 @@ namespace my_report.Extensions
             return ResolveConnectionString(regId);
         }
 
+        /// <summary>
+        /// Returns the appsettings connection string name (e.g. DbConnection) for Telerik SqlDataSource.
+        /// Reports are authored with a named reference like Reporting.AHHA; swapping the name preserves provider resolution.
+        /// </summary>
+        public string ResolveConnectionStringName(IHeaderDictionary? headers)
+        {
+            string? regId = null;
+            if (headers != null && headers.TryGetValue("X-Reg-Id", out var regIdValues))
+                regId = regIdValues.FirstOrDefault();
+
+            return ResolveConnectionStringName(regId);
+        }
+
         public string? ResolveConnectionString(string? regId)
+        {
+            var name = ResolveConnectionStringName(regId);
+            var resolved = _configuration.GetConnectionString(name);
+            return !string.IsNullOrEmpty(resolved) ? resolved : null;
+        }
+
+        public string ResolveConnectionStringName(string? regId)
         {
             if (!string.IsNullOrWhiteSpace(regId))
             {
                 try
                 {
                     var connectionStringName = _dbGetConnection.GetconnectionDB(regId);
-                    if (!string.IsNullOrEmpty(connectionStringName))
+                    if (!string.IsNullOrEmpty(connectionStringName)
+                        && !string.IsNullOrEmpty(_configuration.GetConnectionString(connectionStringName)))
                     {
-                        var resolved = _configuration.GetConnectionString(connectionStringName);
-                        if (!string.IsNullOrEmpty(resolved))
-                            return resolved;
+                        return connectionStringName;
                     }
                 }
                 catch
@@ -47,8 +66,10 @@ namespace my_report.Extensions
                 }
             }
 
-            return _configuration.GetConnectionString("DbConnection")
-                ?? _configuration.GetConnectionString("Reporting.AHHA");
+            if (!string.IsNullOrEmpty(_configuration.GetConnectionString("DbConnection")))
+                return "DbConnection";
+
+            return "Reporting.AHHA";
         }
     }
 }

@@ -34,36 +34,36 @@ namespace my_report.Extensions
             if (reportSource == null)
                 return null!;
 
-            var connectionString = _connectionResolver.ResolveConnectionString(
+            var connectionStringName = _connectionResolver.ResolveConnectionStringName(
                 _httpContextAccessor.HttpContext?.Request.Headers);
 
-            if (string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionStringName))
                 return reportSource;
 
             if (reportSource is InstanceReportSource instanceReportSource)
-                ApplyConnectionString(instanceReportSource.ReportDocument, connectionString);
+                ApplyConnectionStringName(instanceReportSource.ReportDocument, connectionStringName);
 
             return reportSource;
         }
 
-        private static void ApplyConnectionString(IReportDocument reportDocument, string connectionString)
+        private static void ApplyConnectionStringName(IReportDocument reportDocument, string connectionStringName)
         {
             switch (reportDocument)
             {
                 case Report report:
-                    SetSqlDataSourceConnectionStrings(report, connectionString);
+                    SetSqlDataSourceConnectionStringNames(report, connectionStringName);
                     break;
                 case ReportBook reportBook:
                     foreach (var bookReport in reportBook.Reports)
-                        SetSqlDataSourceConnectionStrings(bookReport, connectionString);
+                        SetSqlDataSourceConnectionStringNames(bookReport, connectionStringName);
                     break;
             }
         }
 
-        private static void SetSqlDataSourceConnectionStrings(Report report, string connectionString)
+        private static void SetSqlDataSourceConnectionStringNames(Report report, string connectionStringName)
         {
             foreach (var sqlDataSource in report.GetDataSources().OfType<SqlDataSource>())
-                sqlDataSource.ConnectionString = connectionString;
+                sqlDataSource.ConnectionString = connectionStringName;
         }
     }
 }
