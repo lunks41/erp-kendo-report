@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -47,7 +48,8 @@ builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
     var reportSourceResolver = new RegIdReportSourceResolver(
         fallbackResolver,
         sp.GetRequiredService<IHttpContextAccessor>(),
-        sp.GetRequiredService<ReportConnectionResolver>());
+        sp.GetRequiredService<ReportConnectionResolver>(),
+        sp.GetRequiredService<ILogger<RegIdReportSourceResolver>>());
 
     return new ReportServiceConfiguration
     {

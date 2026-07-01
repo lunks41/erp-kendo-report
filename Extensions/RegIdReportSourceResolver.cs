@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Telerik.Reporting;
 using Telerik.Reporting.Services;
 
@@ -14,15 +15,18 @@ namespace my_report.Extensions
         private readonly IReportSourceResolver _parentResolver;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ReportConnectionResolver _connectionResolver;
+        private readonly ILogger<RegIdReportSourceResolver> _logger;
 
         public RegIdReportSourceResolver(
             IReportSourceResolver parentResolver,
             IHttpContextAccessor httpContextAccessor,
-            ReportConnectionResolver connectionResolver)
+            ReportConnectionResolver connectionResolver,
+            ILogger<RegIdReportSourceResolver> logger)
         {
             _parentResolver = parentResolver;
             _httpContextAccessor = httpContextAccessor;
             _connectionResolver = connectionResolver;
+            _logger = logger;
         }
 
         public ReportSource Resolve(
@@ -34,8 +38,24 @@ namespace my_report.Extensions
             if (reportSource == null)
                 return null!;
 
-            var connectionStringName = _connectionResolver.ResolveConnectionStringName(
-                _httpContextAccessor.HttpContext?.Request.Headers);
+            var regId = _connectionResolver.ResolveRegId(
+                _httpContextAccessor.HttpContext?.Request.Headers,
+                currentParameterValues);
+
+            var connectionStringName = _connectionResolver.ResolveConnectionStringName(regId);
+
+            var connectionInfo = _connectionResolver.DescribeConnection(
+                _httpContextAccessor.HttpContext?.Request.Headers,
+                currentParameterValues);
+
+            _logger.LogInformation(
+                "Report {Report} using connection name {ConnectionName} -> {DataSource}/{Catalog} (RegId header: {HeaderRegId}, RegId used: {RegIdUsed})",
+                report,
+                connectionInfo.ConnectionStringName,
+                connectionInfo.DataSource ?? "?",
+                connectionInfo.InitialCatalog ?? "?",
+                connectionInfo.RegIdFromHeader ?? "(none)",
+                connectionInfo.RegIdUsed ?? "(none)");
 
             if (string.IsNullOrEmpty(connectionStringName))
                 return reportSource;
