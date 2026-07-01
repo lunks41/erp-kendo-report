@@ -19,7 +19,8 @@ Never run `git add -f telerik-license.txt`.
 1. Copy `appsettings.example.json` → `appsettings.json` and set JWT secret + SQL connection strings.
 2. `appsettings.json` is **gitignored** — never commit real secrets.
 3. `regCompany.json` maps `X-Reg-Id` headers to connection string names (safe to commit; no passwords).
-4. Optional: override via environment variables or `appsettings.Development.json` (logging only).
+4. The portal sends `X-Reg-Id` on every report REST call; `RegIdReportSourceResolver` applies the matching SQL connection string to each report's `SqlDataSource` at render time.
+5. Optional: override via environment variables or `appsettings.Development.json` (logging only).
 
 ## GitHub / deploy checklist
 

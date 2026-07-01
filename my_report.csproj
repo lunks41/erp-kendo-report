@@ -8,6 +8,7 @@
 	  <Content Include="Reports\**\*.trdp" CopyToOutputDirectory="PreserveNewest" />
 	  <Content Include="Reports\**\*.png" CopyToOutputDirectory="PreserveNewest" />
 	  <Content Include="Reports\**\*.jpg" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Update="regCompany.json" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	<!-- Local Telerik JWT — never copy to build/publish output (deploy via secure config). -->
 	<ItemGroup>

@@ -7,36 +7,28 @@ namespace my_report.Extensions
 {
     public class CompanyRegistration
     {
-        public string RegId { get; set; }
-        public string CompanyName { get; set; }
-        public string ConnectionStringName { get; set; }
+        public string RegId { get; set; } = string.Empty;
+        public string CompanyName { get; set; } = string.Empty;
+        public string ConnectionStringName { get; set; } = string.Empty;
     }
+
     public class DBGetConnection
     {
-        public string GetconnectionDB(string RegId)
+        public string? GetconnectionDB(string RegId)
         {
-            //read the company registration data from json
-            string regCompanyData = File.ReadAllText("regCompany.json");
-
-            //Convert json to object list
-            var regCompany = JsonConvert.DeserializeObject<IEnumerable<CompanyRegistration>>(regCompanyData);
-
-            // find out the RegId & get the connectionstring from there
-            return regCompany.Where(b => b.RegId == RegId).FirstOrDefault().ConnectionStringName;
+            var regCompany = LoadRegistrations();
+            return regCompany?.FirstOrDefault(b => b.RegId == RegId)?.ConnectionStringName;
         }
 
         public bool ValidateRegId(string RegId)
         {
-            //read the company registration data from json
-            string regCompanyData = File.ReadAllText("regCompany.json");
+            return !string.IsNullOrEmpty(GetconnectionDB(RegId));
+        }
 
-            //Convert json to object list
-            var regCompany = JsonConvert.DeserializeObject<IEnumerable<CompanyRegistration>>(regCompanyData);
-
-            // find out the RegId & get the connectionstring from there
-            var CheckData = regCompany.Where(b => b.RegId == RegId).FirstOrDefault().ConnectionStringName;
-
-            return (CheckData != null ? true : false);
+        private static IEnumerable<CompanyRegistration>? LoadRegistrations()
+        {
+            var regCompanyData = File.ReadAllText("regCompany.json");
+            return JsonConvert.DeserializeObject<IEnumerable<CompanyRegistration>>(regCompanyData);
         }
     }
 }

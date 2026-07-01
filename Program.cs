@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -39,7 +40,16 @@ var reportsPath = System.IO.Path.Combine(builder.Environment.ContentRootPath, "R
 
 // Configure dependencies for ReportsController.
 builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
-    new ReportServiceConfiguration
+{
+    var fallbackResolver = new TypeReportSourceResolver()
+        .AddFallbackResolver(new UriReportSourceResolver(reportsPath));
+
+    var reportSourceResolver = new RegIdReportSourceResolver(
+        fallbackResolver,
+        sp.GetRequiredService<IHttpContextAccessor>(),
+        sp.GetRequiredService<ReportConnectionResolver>());
+
+    return new ReportServiceConfiguration
     {
         // The default ReportingEngineConfiguration will be initialized from appsettings.json or appsettings.{EnvironmentName}.json:
         ReportingEngineConfiguration = sp.GetService<IConfiguration>(),
@@ -48,9 +58,9 @@ builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
         //ReportingEngineConfiguration = ResolveSpecificReportingConfiguration(sp.GetService<IWebHostEnvironment>()),
         HostAppId = "TelerikReportingRestService",
         Storage = new FileStorage(),
-        ReportSourceResolver = new TypeReportSourceResolver()
-            .AddFallbackResolver(new UriReportSourceResolver(reportsPath))
-    });
+        ReportSourceResolver = reportSourceResolver,
+    };
+});
 
 // Configures JWT bearer authentication to protect API endpoints.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

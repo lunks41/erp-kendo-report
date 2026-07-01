@@ -5,17 +5,12 @@
     "ConnectionStringName": "DbConnection"
   },
   {
-    "RegId": "Archi@123",
-    "CompanyName": "Archipelago",
-    "ConnectionStringName": "DBConnection_Archi"
+    "RegId": "Live@123",
+    "CompanyName": "Live",
+    "ConnectionStringName": "DBConnection_Live"
   },
   {
-    "RegId": "Server@123",
-    "CompanyName": "Server",
-    "ConnectionStringName": "DBConnection_Server"
-  },
-  {
-    "RegId": "AHHA_GEI",
+    "RegId": "Astar@GEI",
     "CompanyName": "GEI",
     "ConnectionStringName": "DBConnection_GEI"
   },
