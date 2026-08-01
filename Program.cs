@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
-using my_report.Extensions;
+using erpkendoreport.Extensions;
 
 EnableTracing();
 var builder = WebApplication.CreateBuilder(args);
@@ -58,7 +58,7 @@ builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
 
         // In case the ReportingEngineConfiguration needs to be loaded from a specific configuration file, use the approach below:
         //ReportingEngineConfiguration = ResolveSpecificReportingConfiguration(sp.GetService<IWebHostEnvironment>()),
-        HostAppId = "TelerikReportingRestService",
+        HostAppId = "erpkendoreport",
         Storage = new FileStorage(),
         ReportSourceResolver = reportSourceResolver,
     };

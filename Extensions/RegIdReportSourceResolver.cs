@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Telerik.Reporting;
 using Telerik.Reporting.Services;
 
-namespace my_report.Extensions
+namespace erpkendoreport.Extensions
 {
     /// <summary>
     /// Applies the tenant connection string from X-Reg-Id to SqlDataSource components before rendering.

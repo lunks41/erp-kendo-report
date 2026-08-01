@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace my_report.Extensions
+namespace erpkendoreport.Extensions
 {
     public class ApplicationDbContext : DbContext
     {

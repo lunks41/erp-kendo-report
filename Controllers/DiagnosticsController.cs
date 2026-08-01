@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using my_report.Extensions;
+using erpkendoreport.Extensions;
 
-namespace my_report.Controllers
+namespace erpkendoreport.Controllers
 {
     /// <summary>
     /// Safe diagnostics for tenant DB routing (no passwords returned).

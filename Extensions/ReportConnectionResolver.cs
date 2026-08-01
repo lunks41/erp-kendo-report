@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace my_report.Extensions
+namespace erpkendoreport.Extensions
 {
     public sealed class ReportConnectionInfo
     {

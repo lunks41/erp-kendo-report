@@ -52,7 +52,7 @@ Reports show layout but no invoice lines when the **report service database** do
 
 | Push | Do not push |
 |------|-------------|
-| Source, `my_report.csproj`, `my_report.sln`, `Reports/**` | `telerik-license.txt` |
+| Source, `erpkendoreport.csproj`, `erpkendoreport.sln`, `Reports/**` | `telerik-license.txt` |
 | `appsettings.example.json`, `regCompany.json` | `appsettings.json` |
 | `README.md`, `.gitignore`, `telerik-license.txt.example` | `bin/`, `obj/`, `.vs/`, `*.user`, `*.rar` |
 

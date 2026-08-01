@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace my_report.Extensions
+namespace erpkendoreport.Extensions
 {
     public static class ServiceExtension
     {

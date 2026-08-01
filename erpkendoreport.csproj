@@ -3,6 +3,8 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
+		<RootNamespace>erpkendoreport</RootNamespace>
+		<AssemblyName>erpkendoreport</AssemblyName>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Content Include="Reports\**\*.trdp" CopyToOutputDirectory="PreserveNewest" />
@@ -21,8 +23,8 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
-		<PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="20.0.26.424" />
-		<PackageReference Include="Telerik.Reporting.Services.AspNetCore" Version="20.0.26.424" />
+		<PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="20.1.26.707" />
+		<PackageReference Include="Telerik.Reporting.Services.AspNetCore" Version="20.1.26.707" />
 		<PackageReference Include="Telerik.Licensing" Version="1.8.2" />
 	</ItemGroup>
 </Project>

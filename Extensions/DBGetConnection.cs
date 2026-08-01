@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace my_report.Extensions
+namespace erpkendoreport.Extensions
 {
     public class CompanyRegistration
     {
