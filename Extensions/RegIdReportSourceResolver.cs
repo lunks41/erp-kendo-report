@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Telerik.Reporting;
@@ -8,7 +7,8 @@ using Telerik.Reporting.Services;
 namespace erpkendoreport.Extensions
 {
     /// <summary>
-    /// Applies the tenant connection string from X-Reg-Id to SqlDataSource components before rendering.
+    /// REST report resolver: maps X-Reg-Id / regId parameter to the tenant connection name
+    /// and applies it to every SqlDataSource before Telerik renders the report.
     /// </summary>
     public class RegIdReportSourceResolver : IReportSourceResolver
     {
@@ -38,15 +38,10 @@ namespace erpkendoreport.Extensions
             if (reportSource == null)
                 return null!;
 
-            var regId = _connectionResolver.ResolveRegId(
-                _httpContextAccessor.HttpContext?.Request.Headers,
-                currentParameterValues);
-
+            var headers = _httpContextAccessor.HttpContext?.Request.Headers;
+            var regId = _connectionResolver.ResolveRegId(headers, currentParameterValues);
             var connectionStringName = _connectionResolver.ResolveConnectionStringName(regId);
-
-            var connectionInfo = _connectionResolver.DescribeConnection(
-                _httpContextAccessor.HttpContext?.Request.Headers,
-                currentParameterValues);
+            var connectionInfo = _connectionResolver.DescribeConnection(headers, currentParameterValues);
 
             _logger.LogInformation(
                 "Report {Report} using connection name {ConnectionName} -> {DataSource}/{Catalog} (RegId header: {HeaderRegId}, RegId used: {RegIdUsed})",
@@ -60,30 +55,8 @@ namespace erpkendoreport.Extensions
             if (string.IsNullOrEmpty(connectionStringName))
                 return reportSource;
 
-            if (reportSource is InstanceReportSource instanceReportSource)
-                ApplyConnectionStringName(instanceReportSource.ReportDocument, connectionStringName);
-
-            return reportSource;
-        }
-
-        private static void ApplyConnectionStringName(IReportDocument reportDocument, string connectionStringName)
-        {
-            switch (reportDocument)
-            {
-                case Report report:
-                    SetSqlDataSourceConnectionStringNames(report, connectionStringName);
-                    break;
-                case ReportBook reportBook:
-                    foreach (var bookReport in reportBook.Reports)
-                        SetSqlDataSourceConnectionStringNames(bookReport, connectionStringName);
-                    break;
-            }
-        }
-
-        private static void SetSqlDataSourceConnectionStringNames(Report report, string connectionStringName)
-        {
-            foreach (var sqlDataSource in report.GetDataSources().OfType<SqlDataSource>())
-                sqlDataSource.ConnectionString = connectionStringName;
+            var connectionManager = new ReportConnectionStringManager(connectionStringName);
+            return connectionManager.UpdateReportSource(reportSource);
         }
     }
 }

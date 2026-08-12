@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace erpkendoreport.Extensions
 {
@@ -25,10 +26,10 @@ namespace erpkendoreport.Extensions
         private readonly IConfiguration _configuration;
         private readonly DBGetConnection _dbGetConnection;
 
-        public ReportConnectionResolver(IConfiguration configuration)
+        public ReportConnectionResolver(IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             _configuration = configuration;
-            _dbGetConnection = new DBGetConnection();
+            _dbGetConnection = new DBGetConnection(hostEnvironment.ContentRootPath);
         }
 
         public string? ResolveConnectionString(IHeaderDictionary? headers)

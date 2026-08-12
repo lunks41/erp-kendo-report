@@ -14,6 +14,13 @@ namespace erpkendoreport.Extensions
 
     public class DBGetConnection
     {
+        private readonly string _regCompanyPath;
+
+        public DBGetConnection(string contentRootPath)
+        {
+            _regCompanyPath = Path.Combine(contentRootPath, "regCompany.json");
+        }
+
         public string? GetconnectionDB(string RegId)
         {
             var regCompany = LoadRegistrations();
@@ -25,9 +32,12 @@ namespace erpkendoreport.Extensions
             return !string.IsNullOrEmpty(GetconnectionDB(RegId));
         }
 
-        private static IEnumerable<CompanyRegistration>? LoadRegistrations()
+        private IEnumerable<CompanyRegistration>? LoadRegistrations()
         {
-            var regCompanyData = File.ReadAllText("regCompany.json");
+            if (!File.Exists(_regCompanyPath))
+                return null;
+
+            var regCompanyData = File.ReadAllText(_regCompanyPath);
             return JsonConvert.DeserializeObject<IEnumerable<CompanyRegistration>>(regCompanyData);
         }
     }

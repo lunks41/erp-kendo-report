@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace erpkendoreport.Extensions
 {
@@ -10,7 +11,10 @@ namespace erpkendoreport.Extensions
         public static IServiceCollection RegisterService(this IServiceCollection serviceCollection, IConfiguration configuration)
         {
             serviceCollection.AddHttpContextAccessor();
-            serviceCollection.AddSingleton(new ReportConnectionResolver(configuration));
+            serviceCollection.AddSingleton<ReportConnectionResolver>(sp =>
+                new ReportConnectionResolver(
+                    sp.GetRequiredService<IConfiguration>(),
+                    sp.GetRequiredService<IHostEnvironment>()));
 
             serviceCollection.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
             {
