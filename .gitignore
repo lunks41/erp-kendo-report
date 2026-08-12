@@ -398,8 +398,13 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+# Local Telerik package cache (offline restore when NuGet feed credentials are unavailable)
+local-packages/
+NuGet.config.user
+
 # Graphify knowledge graph output (local only)
 graphify-out/
+
 
 # Markdown files (local docs — do not push to GitHub)
 *.md
