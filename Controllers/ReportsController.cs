@@ -8,7 +8,7 @@ using Telerik.Reporting.Services.AspNetCore;
 namespace erpkendoreport.Controllers
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]  // Allow anonymous access for reporting service
+    [Authorize]
     [ApiController]
     public class ReportsController : ReportsControllerBase
     {

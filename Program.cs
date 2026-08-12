@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,16 +18,39 @@ using erpkendoreport.Extensions;
 
 EnableTracing();
 var builder = WebApplication.CreateBuilder(args);
+var isDev = builder.Environment.IsDevelopment();
 
 // Add services to the container.
 
-builder.Services.AddCors(c =>
+builder.Services.AddCors(options =>
 {
-    c.AddPolicy("AllowOrigin", options =>
-        options.AllowAnyOrigin()
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .WithExposedHeaders("*"));
+    var allowedOriginsRaw = builder.Configuration["Cors:AllowedOrigins"]
+                            ?? builder.Configuration["CORS_ALLOWED_ORIGINS"];
+
+    var allowedOrigins = (allowedOriginsRaw ?? string.Empty)
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+        .ToArray();
+
+    options.AddPolicy("AllowOrigin", policy =>
+    {
+        if (isDev)
+        {
+            policy.AllowAnyOrigin();
+        }
+        else if (allowedOrigins.Length == 0)
+        {
+            policy.SetIsOriginAllowed(_ => false);
+        }
+        else
+        {
+            policy.SetIsOriginAllowed(origin =>
+                allowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase));
+        }
+
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .WithExposedHeaders("*");
+    });
 });
 
 // appsettings.json is gitignored — copy appsettings.example.json locally.
